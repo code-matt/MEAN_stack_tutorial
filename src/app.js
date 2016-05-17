@@ -9,6 +9,11 @@ import mongoose from 'mongoose'; // Wrapper for interacting with MongoDB
 import path from 'path'; // File path utilities to make sure we're using the right type of slash (/ vs \)
 
 /**
+ * Import controllers
+ */
+import mainController from './controllers/main';
+
+/**
  * Configure database
  */
 mongoose.connect('mongodb://localhost:27017/todoDB'); // Connects to your MongoDB.  Make sure mongod is running!
@@ -28,6 +33,15 @@ app.use(express.static(path.join(__dirname, '..', 'public'))); // Set the static
 app.use(logger('dev')); // Log requests to the console
 app.use(bodyParser.json()); // Parse JSON data and put it into an object which we can access
 app.use(methodOverride()); // Allow PUT/DELETE
+
+/**
+ * Configure routes
+ */
+app.get('/', mainController.getIndex);
+app.get('/templates/:template', mainController.getTemplate);
+app.get('/todos', mainController.getAllTodos);
+app.post('/todos', mainController.postNewTodo);
+app.delete('/todos/:id', mainController.deleteTodo);
 
 /**
  * Start app
